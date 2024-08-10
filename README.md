@@ -85,6 +85,11 @@ curl -O https://raw.githubusercontent.com/BidyutRoy2/Shardeum-node/main/installe
 - Wait For Node Installsation Complete
 
 # Login Your Node dashboard
+```
+https://Your VPS IP:8080
+```
+- Click "Advance" & Proceed To
+- Enter Your Node Dashboard Password
 - Go To Click "Maintence"
 - Connect Wallet & Stake Min 10 SHM
 - After Stake Complete Start Node
