@@ -4,6 +4,10 @@
 <img src='Atomium_Stage.jpg' width='800'>
 </p>
 
+<p align="center">
+<img src='2024-08-11_003836.jpg' width='800'>
+</p>
+
 
 # System Requirements
 
@@ -19,18 +23,18 @@
 # Buy VPS From [PQHosting HERE](https://pq.hosting/?from=557648)
 
 <p align="left">
-<img src='2024-08-10_234628.jpg' width='500'>
+<img src='2024-08-10_234628.jpg' width='600'>
 </p>
 
 <p align="left">
-<img src='2024-08-10_234721.jpg' width='500'>
+<img src='2024-08-10_234721.jpg' width='600'>
 </p>
 
 - You Can Pay via Crypto & Complete Payment
 - Wait Few Minutes and Check Your Email
 - Save Your IP, Password & Username in NotePad
 - <p align="left">
-<img src='2024-08-11_000151.jpg' width='500'>
+<img src='2024-08-11_000151.jpg' width='600'>
 </p>
 
 # Open Termius / Putty
@@ -86,19 +90,19 @@ curl -O https://raw.githubusercontent.com/BidyutRoy2/Shardeum-node/main/installe
 - After Stake Complete Start Node
 
 <p align="left">
-<img src='2024-08-11_002250.jpg' width='500'>
+<img src='2024-08-11_002250.jpg' width='600'>
 </p>
 
 
 <p align="left">
-<img src='2024-08-11_002109.jpg' width='500'>
+<img src='2024-08-11_002109.jpg' width='600'>
 </p>
   
 
 # Claim Faucet on [Discord](https://discord.gg/shardeum)
 
 <p align="left">
-<img src='2024-08-11_002622.jpg' width='500'>
+<img src='2024-08-11_002622.jpg' width='600'>
 </p>
   
 
@@ -115,7 +119,7 @@ curl -O https://raw.githubusercontent.com/BidyutRoy2/Shardeum-node/main/installe
 - Done
 
 <p align="left">
-<img src='2024-08-11_002834.jpg' width='500'>
+<img src='2024-08-11_002834.jpg' width='600'>
 </p>
 
 
