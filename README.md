@@ -1,7 +1,7 @@
 # Shardeum Stage 2 Validator Quest and Run Node
 
 <p align="center">
-<img src='Atomium_Stage.jpg' width='800'>
+<img src='GY0NJwVaAAA-FYi.jpg' width='800'>
 </p>
 
 <p align="center">
