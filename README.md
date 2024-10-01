@@ -120,10 +120,10 @@ https://Your VPS IP:8080
 
 # Verify Your Node Stage 2 Validator Quests
 
-## Register Link [Click HERE](https://shardeum.org/incentivized-testnet?referral-code=SHMXP)
+## Register Link [Click HERE](https://shardeum.org/incentivized-testnet?referral-code=shardeum3)
 
 - Connect Your Wallet
-- Enter Code: SHMXP
+- Enter Code: `shardeum3`
 - Click "Validator Quest"
 - Verify Your Node
 - Go To "Quest" & Complete Others task
