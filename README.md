@@ -85,6 +85,12 @@ curl -O https://raw.githubusercontent.com/BidyutRoy2/Shardeum-node/main/installe
 - Wait For Node Installsation Complete
 
 # Login Your Node dashboard
+
+WSL Users
+```
+https://localhost:8080
+```
+VPS Users
 ```
 https://Your VPS IP:8080
 ```
