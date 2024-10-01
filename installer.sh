@@ -1,8 +1,20 @@
 #!/usr/bin/env bash
+
+echo "-----------------------------------------------------------------------------"
+curl -s https://raw.githubusercontent.com/BidyutRoy2/BidyutRoy2/main/logo.sh | bash
+echo "-----------------------------------------------------------------------------"
+
+
 set -e
 
 # Get the environment/OS
 environment=$(uname)
+
+# If the script is run as root, set the HOME variable to the user's home directory
+if [ "$EUID" -eq 0 ]; then
+    ACTUAL_USER=$(logname 2>/dev/null || echo $SUDO_USER)
+    HOME="/home/$ACTUAL_USER"
+fi
 
 # Function to exit with an error message
 exit_with_error() {
@@ -115,16 +127,43 @@ echo "The base directory is set to: $input"
 NODEHOME="${input/#\~/$HOME}" # support ~ in path
 
 # Check all things that will be needed for this script to succeed like access to docker and docker-compose
-# If any check fails exit with a message on what the user needs to do to fix the problem
-command -v git >/dev/null 2>&1 || { echo >&2 "'git' is required but not installed."; exit 1; }
-command -v docker >/dev/null 2>&1 || { echo >&2 "'docker' is required but not installed. See https://github.com/shardeum/validator-dashboard?tab=readme-ov-file#how-to-install-and-run-a-shardeum-validator-node for details."; exit 1; }
+# If any check fails, attempt to install the missing dependency
+command -v git >/dev/null 2>&1 || {
+    echo >&2 "'git' is not installed. Attempting to install git..."
+    if command -v apt-get >/dev/null 2>&1; then
+        sudo apt-get update && sudo apt-get install -y git
+    elif command -v yum >/dev/null 2>&1; then
+        sudo yum install -y git
+    else
+        echo >&2 "Unable to install git. Please install it manually."
+        exit 1
+    fi
+}
+
+command -v docker >/dev/null 2>&1 || {
+    echo >&2 "'docker' is not installed. Attempting to install docker..."
+    curl -fsSL https://get.docker.com -o get-docker.sh
+    sudo sh get-docker.sh
+    sudo usermod -aG docker $USER
+    rm get-docker.sh
+}
+
+if ! command -v docker-compose &>/dev/null && ! docker --help | grep -q "compose"; then
+    echo "docker-compose or docker compose is not installed. Attempting to install docker-compose..."
+    sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+fi
+
+# Verify installations
+command -v git >/dev/null 2>&1 || { echo >&2 "Failed to install git. Please install it manually."; exit 1; }
+command -v docker >/dev/null 2>&1 || { echo >&2 "Failed to install docker. Please install it manually."; exit 1; }
 if command -v docker-compose &>/dev/null; then
-  echo "docker-compose is installed on this machine"
+    echo "docker-compose is installed on this machine"
 elif docker --help | grep -q "compose"; then
-  echo "docker compose subcommand is installed on this machine"
+    echo "docker compose subcommand is installed on this machine"
 else
-  echo "docker-compose or docker compose is not installed on this machine"
-  exit 1
+    echo "Failed to install docker-compose. Please install it manually."
+    exit 1
 fi
 
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
@@ -360,35 +399,65 @@ else
   CHANGEPASSWORD="y"
 fi
 
-if [ "$CHANGEPASSWORD" == "y" ]; then
-  unset CHARCOUNT
-  echo -n "Set the password to access the Dashboard: "
-  CHARCOUNT=0
+
+read_password() {
+  local CHARCOUNT=0
+  local PASSWORD=""
   while IFS= read -p "$PROMPT" -r -s -n 1 CHAR
   do
     # Enter - accept password
     if [[ $CHAR == $'\0' ]] ; then
-      if [ $CHARCOUNT -gt 0 ] ; then # Make sure password character length is greater than 0.
-        break
-      else
-        echo
-        echo -n "Invalid password input. Enter a password with character length greater than 0:"
-        continue
-      fi
+      break
     fi
     # Backspace
     if [[ $CHAR == $'\177' ]] ; then
       if [ $CHARCOUNT -gt 0 ] ; then
         CHARCOUNT=$((CHARCOUNT-1))
         PROMPT=$'\b \b'
-        DASHPASS="${DASHPASS%?}"
+        PASSWORD="${PASSWORD%?}"
       else
         PROMPT=''
       fi
     else
       CHARCOUNT=$((CHARCOUNT+1))
       PROMPT='*'
-      DASHPASS+="$CHAR"
+      PASSWORD+="$CHAR"
+    fi
+  done
+  echo $PASSWORD
+}
+
+if [ "$CHANGEPASSWORD" = "y" ]; then
+  valid_pass=false
+  while [ "$valid_pass" = false ] ;
+  do
+    echo -n -e "Password requirements: min 8 characters, at least 1 lower case letter, at least 1 upper case letter, at least 1 number, at least 1 special character !@#$%^&*()_+$ \nSet the password to access the Dashboard:"
+    DASHPASS=$(read_password)
+
+    # Check password length
+    if (( ${#DASHPASS} < 8 )); then
+        echo -e "\nInvalid password! Too short.\n"
+
+    # Check for at least one lowercase letter
+    elif ! [[ "$DASHPASS" =~ [a-z] ]]; then
+        echo -e "\nInvalid password! Must contain at least one lowercase letter.\n"
+
+    # Check for at least one uppercase letter
+    elif ! [[ "$DASHPASS" =~ [A-Z] ]]; then
+        echo -e "\nInvalid password! Must contain at least one uppercase letter.\n"
+
+    # Check for at least one number
+    elif ! [[ "$DASHPASS" =~ [0-9] ]]; then
+        echo -e "\nInvalid password! Must contain at least one number.\n"
+
+    # Check for at least one special character
+    elif ! [[ "$DASHPASS" =~ [!@#$%^\&*()_+$] ]]; then
+        echo -e "\nInvalid password! Must contain at least one special character !@#$%^&*()_+$.\n"
+
+    # Password is valid
+    else
+        valid_pass=true
+        echo "\nPassword set successfully."
     fi
   done
 
@@ -504,7 +573,7 @@ done
 
 #APPSEEDLIST="archiver-sphinx.shardeum.org"
 #APPMONITOR="monitor-sphinx.shardeum.org"
-APPMONITOR="198.58.113.59"
+APPMONITOR="96.126.116.124"
 RPC_SERVER_URL="https://atomium.shardeum.org"
 
 cat <<EOF
@@ -524,7 +593,7 @@ if [ -d "$NODEHOME" ]; then
   fi
 fi
 
-git clone https://github.com/shardeum/validator-dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
+git clone -b dev https://github.com/shardeum/validator-dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
 cd ${NODEHOME}
 chmod a+x ./*.sh
 
@@ -543,7 +612,7 @@ touch ./.env
 cat >./.env <<EOL
 EXT_IP=${EXTERNALIP}
 INT_IP=${INTERNALIP}
-EXISTING_ARCHIVERS=[{"ip":"198.58.110.213","port":4000,"publicKey":"d34b80a5a6f9638b7c75d6eb6e59d35d9a3e103f1877827eebbe973b8281f794"},{"ip":"3.73.66.238","port":4000,"publicKey":"7af699dd711074eb96a8d1103e32b589e511613ebb0c6a789a9e8791b2b05f34"},{"ip":"35.233.225.113","port":4000,"publicKey":"59c3794461c7f58a0a7f24d70dfd512d4364cd179d2670ac58e9ae533d50c7eb"}]
+EXISTING_ARCHIVERS=[{"ip":"34.159.56.206","port":4000,"publicKey":"64a3833499130406550729ab20f6bec351d04ec9be3e5f0144d54f01d4d18c45"},{"ip":"3.76.189.189","port":4000,"publicKey":"44d4be08423dd9d90195d650fc58f41cc2fdeb833180686cdbcb3196fe113497"},{"ip":"69.164.202.28","port":4000,"publicKey":"2cfbc5a9a96591e149225395ba33fed1a8135123f7702abdb7deca3d010a21ee"}]
 APP_MONITOR=${APPMONITOR}
 DASHPASS=${DASHPASS}
 DASHPORT=${DASHPORT}
@@ -553,11 +622,11 @@ SHMEXT=${SHMEXT}
 SHMINT=${SHMINT}
 RPC_SERVER_URL=${RPC_SERVER_URL}
 NEXT_PUBLIC_RPC_URL=${RPC_SERVER_URL}
-NEXT_EXPLORER_URL=https://explorer-atomium.shardeum.org/
+NEXT_EXPLORER_URL=https://explorer-atomium.shardeum.org
 minNodes=640
 baselineNodes=640
+maxNodes=1200
 nodesPerConsensusGroup=128
-
 EOL
 
 cat <<EOF
@@ -637,26 +706,3 @@ To use the Command Line Interface:
 	3. Run "operator-cli --help" for commands
 
 EOF
-
-echo -e '\e[40m\e[92m'
-
-echo -e ' ##   ##   ######  #####    #####    #######  ##    ## '
-echo -e ' ##   ##     ##    ##  ##   ##  ##   ##       ###   ## '
-echo -e ' ##   ##     ##    ##   ##  ##   ##  ##       ## #  ## '
-echo -e ' #######     ##    ##   ##  ##   ##  #####    ##  # ## '
-echo -e ' ##   ##     ##    ##   ##  ##   ##  ##       ##   ### '
-echo -e ' ##   ##     ##    ##  ##   ##  ##   ##       ##    ## '
-echo -e ' ##   ##   ######  #####    #####    #######  ##    ## '
-                                                      
-echo -e '        #####     #######  ##     ## '
-echo -e '       ##   ##    ##       ###   ### ' 
-echo -e '       ##         ##       ## # # ## '  
-echo -e '       ##  #####  #####    ##  #  ## '  
-echo -e '       ##   ## #  ##       ##     ## '  
-echo -e '       ##   ## #  ##       ##     ## '  
-echo -e '        #####     #######  ##     ## '
-
-echo -e ' Wellcome To Hidden Gem Node Running Installation Guide '
-
-echo -e '\e[0m'
-
