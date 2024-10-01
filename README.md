@@ -1,4 +1,4 @@
-# Shardeum Stage 2 Validator Quest and Run Node
+# Shardeum Testnet Stage 3 Validator Quest and Run Node
 
 <p align="center">
 <img src='GY0NJwVaAAA-FYi.jpg' width='800'>
