@@ -1,4 +1,4 @@
-# Shardeum Testnet Stage 3 Validator Quest and Run Node
+# Shardeum Atomium Testnet Stage 3 Validator Quest and Run Node Setup Guide
 
 <p align="center">
 <img src='GY0NJwVaAAA-FYi.jpg' width='800'>
