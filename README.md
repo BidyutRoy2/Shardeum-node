@@ -1,4 +1,4 @@
-# Shardeum Atomium Testnet Stage 3 Validator Quest and Run Node Setup Guide
+# Shardeum Atomium Stage 4 (Final phase Before Mainnet) Validator Quest and Run Node Setup Guide
 
 <p align="center">
 <img src='GY0NJwVaAAA-FYi.jpg' width='800'>
@@ -77,7 +77,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 Download and Install Validator
 ```
-curl -O https://raw.githubusercontent.com/BidyutRoy2/Shardeum-node/main/installer.sh && chmod +x installer.sh && ./installer.sh
+curl -O https://raw.githubusercontent.com/BidyutRoy2/Shardeum-node/refs/heads/main/Shardeum.sh && chmod +x Shardeum.sh && ./Shardeum.sh
 ```
 
 - The terminal will ask questions about your setup settings
