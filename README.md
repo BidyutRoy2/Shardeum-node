@@ -116,10 +116,10 @@ https://Your VPS IP:8080
 
 # Verify Your Node Stage 2 Validator Quests
 
-## Register Link [Click HERE](https://shardeum.org/incentivized-testnet?referral-code=shardeum3)
+## Register Link [Click HERE](https://shardeum.org/incentivized-testnet?referral-code=Stage4Live)
 
 - Connect Your Wallet
-- Enter Code: `shardeum3`
+- Enter Code: `Stage4Live`
 - Click "Validator Quest"
 - Verify Your Node
 - Go To "Quest" & Complete Others task
