@@ -44,35 +44,9 @@
 
 # Now Install Node Copy/Past Following Command
 
-use curl in this tutorial to download files
+Setup
 ```
-sudo apt-get install curl
-```
-
-add Homebrew to your PATH:
-```
-echo 'eval "$(/opt/homebrew/bin/brew shellenv)"'
-eval "$(/opt/homebrew/bin/brew shellenv)"
-```
-
-Update package managers
-```
-sudo apt update
-```
-
-Install docker and docker.io
-```
-sudo apt install docker.io
-```
-
-Install docker-compose
-```
-sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-```
-
-Setup permissions for docker-compose:
-```
-sudo chmod +x /usr/local/bin/docker-compose
+source <(wget -O - https://raw.githubusercontent.com/BidyutRoy2/Shardeum-node/refs/heads/main/setup.sh)
 ```
 
 Download and Install Validator
